@@ -150,7 +150,7 @@ header {
 }
 
 .cart {
-  margin-right: 46px;
+  margin-right: 41px;
   position: relative;
   top: 20px;
   height: 65px;
@@ -340,6 +340,9 @@ header {
   -webkit-transition: ease 0.2s;
   transition: ease 0.2s;
   border-radius: 50%;
+  margin-bottom: 7px;
+  position: relative;
+  left: 2px;
 }
 
 .profile img {
