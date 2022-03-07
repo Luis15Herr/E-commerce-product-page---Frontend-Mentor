@@ -24,7 +24,7 @@ Vue.createApp({
       },
       lightbox: false,
       mobileNav: false,
-      quantity: 1,
+      quantity: 0,
       cart: [],
       selectedImg: 1,
       showCart: false,
@@ -115,7 +115,6 @@ Vue.createApp({
     },
   },
   mounted() {
-    this.addToCart();
     this.getImg(1);
   },
   created() {},
