@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- displays site properly based on user's device -->
+
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./images/favicon-32x32.png"
+    />
+
+    <title>Frontend Mentor | E-commerce product page</title>
+
+    <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://unpkg.com/vue@3"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <div class="container" id="app">
+      <header>
+        <div class="header__left">
+          <a href="#" class="mobile__nav-trigger" @click="triggerMobileNav">
+            <svg width="16" height="15" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M16 12v3H0v-3h16Zm0-6v3H0V6h16Zm0-6v3H0V0h16Z"
+                fill="#69707D"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </a>
+          <img class="logo" src="./images/logo.svg" alt="" />
+          <div
+            class="mobile__nav"
+            :class="{'mobile__nav--active' : mobileNav }"
+          >
+            <div class="mobile__nav-wrapper">
+              <a
+                href="#"
+                class="mobile__nav-closeBtn"
+                @click="triggerMobileNav"
+              >
+                <svg width="14" height="15" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="m11.596.782 2.122 2.122L9.12 7.499l4.597 4.597-2.122 2.122L7 9.62l-4.595 4.597-2.122-2.122L4.878 7.5.282 2.904 2.404.782l4.595 4.596L11.596.782Z"
+                    fill="#69707D"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </a>
+              <ul class="mobile__nav-list">
+                <li class="mobile__nav-item">Collections</li>
+                <li class="mobile__nav-item">Men</li>
+                <li class="mobile__nav-item">Women</li>
+                <li class="mobile__nav-item">About</li>
+                <li class="mobile__nav-item">Contact</li>
+              </ul>
+            </div>
+          </div>
+          <nav class="menu">
+            <ul class="menu__wrapper">
+              <li class="menu__item">Collections</li>
+              <li class="menu__item">Men</li>
+              <li class="menu__item">Women</li>
+              <li class="menu__item">About</li>
+              <li class="menu__item">Contact</li>
+            </ul>
+          </nav>
+        </div>
+        <div class="header__right">
+          <div class="cart">
+            <a href="#" class="cart__button"
+              ><img src="./images/icon-cart.svg" alt="" />
+              <span v-if="cart.length !=0" class="cart__badge"
+                >{{cartQty}}</span
+              ></a
+            >
+            <a
+              href="#"
+              @click="triggerShowCart"
+              class="cart__button cart__button--mb"
+              ><img src="./images/icon-cart.svg" alt="" />
+              <span class="cart__badge" v-if="cart.length !=0"
+                >{{cartQty}}</span
+              ></a
+            >
+            <div class="cart__list">
+              <span class="cart__list-tittle">Cart</span>
+
+              <ul>
+                <li v-for="(item,index) in cart" class="cart__item">
+                  <img
+                    class="cart__item-img"
+                    src="./images/image-product-1-thumbnail.jpg"
+                    alt=""
+                  />
+
+                  <div class="cart__item-info">
+                    <span class="cart__item-name">{{item.product.name}}</span>
+                    <span class="cart__item-cost">
+                      ${{getPrice(item.product.price,item.product.discount)}} x
+                      {{item.quantity}}
+                      <span class="cart__item-total"
+                        >${{getTotal(getPrice(item.product.price,item.product.discount),
+                        item.quantity)}}</span
+                      >
+                    </span>
+
+                    <a
+                      class="cart__item-delete"
+                      href="#"
+                      @click="deleteProduct(index)"
+                      ><svg
+                        width="14"
+                        height="16"
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                      >
+                        <defs>
+                          <path
+                            d="M0 2.625V1.75C0 1.334.334 1 .75 1h3.5l.294-.584A.741.741 0 0 1 5.213 0h3.571a.75.75 0 0 1 .672.416L9.75 1h3.5c.416 0 .75.334.75.75v.875a.376.376 0 0 1-.375.375H.375A.376.376 0 0 1 0 2.625Zm13 1.75V14.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 1 14.5V4.375C1 4.169 1.169 4 1.375 4h11.25c.206 0 .375.169.375.375ZM4.5 6.5c0-.275-.225-.5-.5-.5s-.5.225-.5.5v7c0 .275.225.5.5.5s.5-.225.5-.5v-7Zm3 0c0-.275-.225-.5-.5-.5s-.5.225-.5.5v7c0 .275.225.5.5.5s.5-.225.5-.5v-7Zm3 0c0-.275-.225-.5-.5-.5s-.5.225-.5.5v7c0 .275.225.5.5.5s.5-.225.5-.5v-7Z"
+                            id="a"
+                          />
+                        </defs>
+                        <use
+                          fill="#C3CAD9"
+                          fill-rule="nonzero"
+                          xlink:href="#a"
+                        />
+                      </svg>
+                    </a>
+                  </div>
+                </li>
+                <li v-if="cart.length ===0" class="empty">
+                  Your cart is empty
+                </li>
+                <a href="#" v-else class="cart__checkout-btn">Checkout</a>
+              </ul>
+            </div>
+          </div>
+          <div class="profile">
+            <img src="./images/image-avatar.png" alt="" />
+          </div>
+        </div>
+        <div class="cart-mobile" :class="{'cart-mobile--active' : showCart}">
+          <span class="cart__list-tittle">Cart</span>
+
+          <ul class="cart__list-mobile">
+            <li v-for="(item,index) in cart" class="cart__item">
+              <img
+                class="cart__item-img"
+                src="./images/image-product-1-thumbnail.jpg"
+                alt=""
+              />
+
+              <div class="cart__item-info">
+                <span class="cart__item-name">{{item.product.name}}</span>
+                <span class="cart__item-cost">
+                  ${{getPrice(item.product.price,item.product.discount)}} x
+                  {{item.quantity}}
+                  <span class="cart__item-total"
+                    >${{getTotal(getPrice(item.product.price,item.product.discount),
+                    item.quantity)}}</span
+                  >
+                </span>
+
+                <a
+                  class="cart__item-delete"
+                  href="#"
+                  @click="deleteProduct(index)"
+                  ><svg
+                    width="14"
+                    height="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                  >
+                    <defs>
+                      <path
+                        d="M0 2.625V1.75C0 1.334.334 1 .75 1h3.5l.294-.584A.741.741 0 0 1 5.213 0h3.571a.75.75 0 0 1 .672.416L9.75 1h3.5c.416 0 .75.334.75.75v.875a.376.376 0 0 1-.375.375H.375A.376.376 0 0 1 0 2.625Zm13 1.75V14.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 1 14.5V4.375C1 4.169 1.169 4 1.375 4h11.25c.206 0 .375.169.375.375ZM4.5 6.5c0-.275-.225-.5-.5-.5s-.5.225-.5.5v7c0 .275.225.5.5.5s.5-.225.5-.5v-7Zm3 0c0-.275-.225-.5-.5-.5s-.5.225-.5.5v7c0 .275.225.5.5.5s.5-.225.5-.5v-7Zm3 0c0-.275-.225-.5-.5-.5s-.5.225-.5.5v7c0 .275.225.5.5.5s.5-.225.5-.5v-7Z"
+                        id="a"
+                      />
+                    </defs>
+                    <use fill="#C3CAD9" fill-rule="nonzero" xlink:href="#a" />
+                  </svg>
+                </a>
+              </div>
+            </li>
+            <li v-if="cart.length ===0" class="empty">Your cart is empty</li>
+            <a href="#" v-else class="cart__checkout-btn">Checkout</a>
+          </ul>
+        </div>
+      </header>
+      <main class="product-page">
+        <div class="light-box" v-if="lightbox">
+          <div class="light-box__wrapper">
+            <a class="lightbox__close-btn" @click="triggerBox" href="#">
+              <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="m11.596.782 2.122 2.122L9.12 7.499l4.597 4.597-2.122 2.122L7 9.62l-4.595 4.597-2.122-2.122L4.878 7.5.282 2.904 2.404.782l4.595 4.596L11.596.782Z"
+                  fill="#69707D"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </a>
+            <div class="light-box__img-wrapper">
+              <a href="#" class="left" @click="changeBox('<',selectedImg.id)"
+                ><svg width="12" height="18" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M11 1 3 9l8 8"
+                    stroke="#1D2026"
+                    stroke-width="3"
+                    fill="none"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </a>
+              <img
+                :src="selectedImg.url"
+                class="lightbox__img-principal"
+                alt=""
+              />
+              <a class="right" href="#" @click="changeBox('>',selectedImg.id)"
+                ><svg width="13" height="18" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="m2 1 8 8-8 8"
+                    stroke="#1D2026"
+                    stroke-width="3"
+                    fill="none"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </a>
+            </div>
+            <ul class="product__img-list lightbox__img-list">
+              <li
+                v-for="(img,index) in product.thumbnails"
+                class="product__img"
+                :class="{ 'product__img--selected' : index === selectedImg.id-1 }"
+                @click="getImg(img.id)"
+              >
+                <img :src="img.url" alt="" />
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="product-page__left">
+          <div class="img__product-wrapper">
+            <a
+              href="#"
+              class="mb-row--left mb-row"
+              @click="changeBox('<',selectedImg.id)"
+              ><svg width="12" height="18" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M11 1 3 9l8 8"
+                  stroke="#1D2026"
+                  stroke-width="3"
+                  fill="none"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </a>
+            <img
+              @click="triggerBox"
+              :src="selectedImg.url"
+              class="product__img-principal"
+              alt=""
+            />
+            <a
+              class="mb-row--right mb-row"
+              href="#"
+              @click="changeBox('>',selectedImg.id)"
+              ><svg width="13" height="18" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="m2 1 8 8-8 8"
+                  stroke="#1D2026"
+                  stroke-width="3"
+                  fill="none"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </a>
+          </div>
+          <ul class="product__img-list">
+            <li
+              v-for="(img,index) in product.thumbnails"
+              class="product__img"
+              :class="{ 'product__img--selected' : index === selectedImg.id-1 }"
+              @click="getImg(img.id)"
+            >
+              <img :src="img.url" alt="" />
+            </li>
+          </ul>
+        </div>
+        <div class="product-page__right">
+          <div class="product__info">
+            <span class="product__topinfo"> {{product.brand}} </span>
+            <h1 class="product__tittle">{{product.name}}</h1>
+            <p class="product__description">{{product.description}}</p>
+          </div>
+          <div class="product__price">
+            <div class="product__actual-price">
+              <span class="price"
+                >{{'$'+ getPrice(product.price, product.discount)}}</span
+              ><span class="discount">{{product.discount + '%'}}</span>
+            </div>
+            <div class="product__original-price">
+              <span>{{'$'+product.price + '.00'}}</span>
+            </div>
+          </div>
+          <div class="product__btns">
+            <div class="quantity__buttons">
+              <button class="quantity__controls-btn" @click="quantity--">
+                <svg
+                  width="12"
+                  height="4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                >
+                  <defs>
+                    <path
+                      d="M11.357 3.332A.641.641 0 0 0 12 2.69V.643A.641.641 0 0 0 11.357 0H.643A.641.641 0 0 0 0 .643v2.046c0 .357.287.643.643.643h10.714Z"
+                      id="a"
+                    />
+                  </defs>
+                  <use fill="#FF7E1B" fill-rule="nonzero" xlink:href="#a" />
+                </svg>
+              </button>
+              <span>{{controledQty}}</span>
+              <button class="quantity__controls-btn" @click="quantity++">
+                <svg
+                  width="12"
+                  height="12"
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                >
+                  <defs>
+                    <path
+                      d="M12 7.023V4.977a.641.641 0 0 0-.643-.643h-3.69V.643A.641.641 0 0 0 7.022 0H4.977a.641.641 0 0 0-.643.643v3.69H.643A.641.641 0 0 0 0 4.978v2.046c0 .356.287.643.643.643h3.69v3.691c0 .356.288.643.644.643h2.046a.641.641 0 0 0 .643-.643v-3.69h3.691A.641.641 0 0 0 12 7.022Z"
+                      id="b"
+                    />
+                  </defs>
+                  <use fill="#FF7E1B" fill-rule="nonzero" xlink:href="#b" />
+                </svg>
+              </button>
+            </div>
+            <button class="addToCart__btn" @click="addToCart">
+              <img class="addToCartIcon" src="./images/icon-cart.svg" alt="" />
+              Add to cart
+            </button>
+          </div>
+        </div>
+      </main>
+      <div class="attribution">
+        Challenge by
+        <a href="https://www.frontendmentor.io?ref=challenge" target="_blank"
+          >Frontend Mentor</a
+        >. Coded by
+        <a target="_blank" href="https://www.instagram.com/luisherrerael"
+          >Luis Herrera⚡</a
+        >.
+      </div>
+    </div>
+  </body>
+  <script src="./js.js"></script>
+</html>
